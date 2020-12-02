@@ -1,9 +1,10 @@
 #pragma once
 
+#include "linked_list.h"
 #include "searcher.h"
 
 template <typename T>
-using list = LinkedList<T> 
+using list = LinkedList<T>;
 
 class NamedTuple {
     string label;
@@ -16,8 +17,19 @@ class NamedTuple {
 using relations = LinkedList<NamedTuple>;
 
 class NetworkScrapper {
-    string& getTopic(int i);
-    Person& getPerson(int i);
+    MemoriedSearcher<Person> people;
+    MemoriedSearcher<string> topics;
+
+    public:
+        NetworkScrapper(Network& network) : people(network.people), topics(network.subjects) {}
+
+        string& getTopic(int i) {
+            return topics.get(i);
+        }
+
+        Person& getPerson(int i) {
+            return people.get(i);
+        }
 };
 
 class SocialMember {
@@ -27,7 +39,7 @@ class SocialMember {
     
     public:
 
-    SocialMember(Person person, NetworkScrapper finder) : name(person.name) {
+    SocialMember(Person person, NetworkScrapper& finder) : name(person.name) {
         // convert topics to named tuple
         for (auto topic : person.topics) {
             string label = finder.getTopic(topic.getIndex());
@@ -41,22 +53,6 @@ class SocialMember {
     }
 };
 
-class NetworkScrapper {
-    MemoriedSearcher<Person> people;
-    MemoriedSearcher<string> topics;
-
-    public:
-        NetworkScrapper(Network network) : people(network.people), topics(network.subjects) {}
-
-        string& getTopic(int i) {
-            return topics.get(i);
-        }
-
-        Person& getPerson(int i) {
-            return people.get(i);
-        }
-};
-
 class SocialNetwork {
 
     private:
@@ -64,7 +60,7 @@ class SocialNetwork {
         list<SocialMember> people;
 
     public:
-        SocialNetwork(Network network) : subjects(network.subjects), people(list<SocialMember> {}) {
+        SocialNetwork(Network& network) : subjects(network.subjects), people(list<SocialMember> {}) {
             NetworkScrapper finder(network);
 
             for (Person& person : network.people) {
@@ -73,7 +69,6 @@ class SocialNetwork {
             }
         }
 };
-
 
 
 // class SocialNetworkMerger {

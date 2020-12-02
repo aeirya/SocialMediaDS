@@ -89,3 +89,36 @@ void Network:: readNetwork() {
     }
 }
 
+// used by main
+
+void inputNetworks(LinkedList<Network>& networks) {
+    // number of networks
+    int t;
+    cin >> t;
+    for (int i = 0; i < t; ++i) {
+        Network network(i);
+        network.readNetwork();
+        networks.add(network);
+    }
+}
+
+void inputQueries() {
+    // query num
+    int q;
+    int qi;
+    int k;
+    cin >> q;
+
+    for (int i = 0; i < q; ++i) {
+        // number of subjects
+        cin >> qi;;
+        string subject;
+        for (int j = 0; j < qi; ++j)
+        {   
+            cin >> subject;
+        }
+        cin >> k;
+    }
+}
+
+

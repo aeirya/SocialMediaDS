@@ -1,4 +1,6 @@
-#include <linked_list.h>
+#pragma once
+
+#include "linked_list.h"
 
 template <typename T>
 class MemoriedSearcher {
@@ -8,7 +10,7 @@ class MemoriedSearcher {
     int index;
 
     public:
-    MemoriedSearcher(LinkedList<T> list) : list(list) {
+    MemoriedSearcher(LinkedList<T>& list) : list(list) {
         it = list.begin();
     }
 

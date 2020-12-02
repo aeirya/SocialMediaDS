@@ -1,4 +1,6 @@
-// #pragma once
+#pragma once
+#include "person.h"
+#include "linked_list.h"
 
 class Network {
     public:
@@ -66,7 +68,6 @@ class Network {
             return dest;
         }
 
-    private:
         LinkedList<string> subjects {};
         LinkedList<Person> people {};
 
@@ -75,47 +76,7 @@ class Network {
         }
 
         void addPerson(Person person) {
-            person.network = this;
+            // person.network = this;
             people.add(person);
         }
 };
-
-void Network:: readNetwork() {
-    // read subjects
-    cin >> m;
-    string subject;
-    for (int i = 0; i < m; ++i) {
-        cin >> subject;
-        addSubject(subject);
-    }
-    // read people
-    cin >> n;
-    for (int i = 0; i < n; ++i) {
-        addPerson(readPerson());
-    }
-    // friendship chain
-    int r;
-    cin >> r;
-    int index; //person
-    int d; //# of friends
-
-    auto it = people.begin();
-    int counter = 0;
-    LinkedList<Tuple>* friendships;
-    for (int i = 0; i < r; ++i) {
-        friendships = new LinkedList<Tuple>();
-        cin >> index >> d;
-        while (counter != index) {
-            ++it;
-            ++counter;
-        }
-        for (int j = 0; j < d; ++j)
-        {
-            Tuple friendship = readTuple();
-            (*friendships).add(friendship);
-        }
-        Person* p = &*it;
-        p->friendships = *friendships;
-    }
-}
-

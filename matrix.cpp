@@ -1,4 +1,4 @@
-// #pragma once
+#pragma once
 #include "linked_list.h"
 #include<iostream>
 
@@ -53,19 +53,19 @@ class item {
 
 };
 
-using list = LinkedList<item>;
+using ilist = LinkedList<item>;
 using iterator = NodeIterator<item>;
 
 class matrix {
-    list items {};
+    ilist items {};
 
     public:
         matrix() {
-            items = list();
+            items = ilist();
             // add(0,0,0.0f);
         }
 
-        explicit matrix(list lst) : items(lst) { }
+        explicit matrix(ilist lst) : items(lst) { }
 
         matrix& operator+=(matrix& other) {
             for (item& j : other) {
@@ -130,7 +130,7 @@ class matrix {
         }
 
         matrix operator*(matrix& other) {
-            list toAdd {};
+            ilist toAdd {};
 
             // multiply
             for (item& i : items) {

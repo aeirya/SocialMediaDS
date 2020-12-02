@@ -1,3 +1,5 @@
+#pragma once
+
 #include "linked_list.h"
 #include "tuple.h"
 
@@ -28,7 +30,7 @@ class Person {
             return *this;
         }
 
-        Person& operator+(Person& person) {
+        // Person& operator+(Person& person) {
             
-        }    
+        // }    
 };
