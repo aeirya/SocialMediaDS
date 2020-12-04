@@ -11,17 +11,18 @@ class MemoriedSearcher {
 
     public:
     MemoriedSearcher(LinkedList<T>& list) : list(list) {
+        index = 0;
         it = list.begin();
     }
 
     T& get(int i) {
-        while (i < index) {
+        while (i > index) {
             ++it;
-            ++i;
+            ++index;
         }
         while (i < index) {
             --it;
-            --i;
+            --index;
         }
         return *it;
     }

@@ -30,7 +30,7 @@ class Network {
             return false;
         }
 
-        Network& merge(Network& other) {
+        Network merge(Network& other) {
             Network dest(*this);
 
             // first merge subjects

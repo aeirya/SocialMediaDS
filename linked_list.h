@@ -1,5 +1,8 @@
 #pragma once
 
+template <typename T>
+class LinkedListSorter;
+
 template<typename T>
 class NodeIterator;
 
@@ -7,11 +10,18 @@ template <typename T>
 class LinkedList {    
 
     public:
-        struct Node
+        class Node
         {
+            public:
+
             T value;
             Node* next;
             Node* previous;
+
+            void addNext(Node& node) {
+                next = &node;
+                node.previous = *this;
+            }
         };
 
         LinkedList() : m_head(0), m_tail(0) {}
@@ -21,14 +31,15 @@ class LinkedList {
             // while (node.next) {
 
             // }
+
         }
 
 
         void add(const T& value) {
             
-            Node* node = new Node { value, 0, m_head };
-            node->value = value;
-            node->next = 0;
+            Node* node = new Node { value, 0, m_tail };
+            // node->value = value;
+            // node->next = 0;
 
             if (!m_head) {
                 m_head = node;
@@ -55,6 +66,11 @@ class LinkedList {
                 --i;
             }
             return *it;
+        }
+
+        // sort
+        void sort() {
+            LinkedListSorter<T>::sort(*this);
         }
 
         // enumeration
@@ -116,15 +132,19 @@ class NodeIterator {
         return other.node != this->node;
     } 
 
-    Node<T>* getCurrent() {
-        return node;
+    bool operator==(const NodeIterator<T>& other) {
+        return this->node == other.node;
+    }
+
+    Node<T>& getCurrent() {
+        return *node;
     }
 };
 
 template<typename T>
 class LinkedListSorter {
     
-    friend void swap_with_previous(Node<T>& node) {
+    static void swap_with_previous(Node<T>& node) {
         Node<T>* p = node.previous;
         Node<T>* pp = p->previous;
         Node<T>* n = node.next;
@@ -136,61 +156,66 @@ class LinkedListSorter {
 
     public:
 
-    friend void sort(LinkedList<T> list) {
+    static void sort(LinkedList<T>& list) {
         auto it = list.begin();
-        while (true) {
-            auto previous = *it;
-            auto pre_node = it.getCurrent();
-            it++;
-            auto current = *it;
-            auto curr_node = it.getCurrent();
+        while (it != list.end()) {
+            auto& previous = *it;
+            auto& pre_node = it.getCurrent();
+            ++it;
+            if (it == list.end()) break;
+            auto& current = *it;
+            auto& curr_node = it.getCurrent();
 
-            if (previous > current) {
-                swap_with_previous(*curr_node);
+            if (current < previous) {
+                swap_with_previous(curr_node);
             }
         }
     }
 };
 
-// template<typename T, typename Merger>
-// LinkedList<T> merge_sorted_linkedlists(const LinkedList<T>& to, const LinkedList<T>& from, Merger merger) {
-//     auto toIt = to.begin();
-//     auto fromIt = from.begin();
-//     LinkedList<T> merged {};
+template<typename T, typename Merger>
+LinkedList<T> merge_sorted_linkedlists(LinkedList<T>& to, LinkedList<T>& from, Merger merger) {
+    auto toIt = to.begin();
+    auto fromIt = from.begin();
+    LinkedList<T> merged {};
 
-//     while(toIt != to.end() || fromIt != from.end()) {
-//         if (toIt == to.end()) {
-//             while (fromIt != from.end()) {
-//                 merged.add(*fromIt);
-//                 ++fromIt;
-//             }
-//             break;
-//         }
-//         else if (fromIt == from.end()){
-//             while (toIt != to.end()) {
-//                 merged.add(*toIt);
-//                 ++toIt;
-//             }
-//             break;
-//         } else {
-//             auto toVal = *toIt;
-//             auto fromVal = *fromIt;
+    while(toIt != to.end() || fromIt != from.end()) {
+        if (toIt == to.end()) {
+            while (fromIt != from.end()) {
+                merged.add(*fromIt);
+                ++fromIt;
+            }
+            break;
+        }
+        else if (fromIt == from.end()){
+            while (toIt != to.end()) {
+                merged.add(*toIt);
+                ++toIt;
+            }
+            break;
+        } else {
+            auto toVal = *toIt;
+            auto fromVal = *fromIt;
 
-//             if (fromVal == toVal) {
-//                 merged.add(merger(fromVal, toVal));
-//                 ++toIt;
-//                 ++fromIt;
-//             } else {
-//                 auto& ptr = (fromVal < toVal) ? fromIt : toIt;
-//                 merged.add(*ptr);
-//                 ++(ptr);
-//             }
-//             to.end();
-//         }
-//     }
-//     return merged;
-// }
+            if (fromVal == toVal) {
+                merged.add(merger(fromVal, toVal));
+                ++toIt;
+                ++fromIt;
+            } else {
+                auto& ptr = (fromVal < toVal) ? fromIt : toIt;
+                merged.add(*ptr);
+                ++(ptr);
+            }
+            to.end();
+        }
+    }
+    return merged;
+}
 
+template<typename T>
+LinkedList<T> merge_sorted_linkedlists(LinkedList<T>& to, LinkedList<T>& from) {
+    return merge_sorted_linkedlists(to, from, [](T& left, T& right) { return left + right; });
+}
 
 // int main() {
     

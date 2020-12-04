@@ -12,17 +12,28 @@ void rc() {
     cout << "reached checkpoint!" << endl;
 }
 
-void makeSuperNetwork(LinkedList<Network>& networks) {
-    Network super {};
-    for (Network& net : networks) {
-        super += net;
+SocialNetwork makeSuperNetwork(LinkedList<SocialNetwork>& networks) {
+    SocialNetwork super {};
+    for (SocialNetwork& net : networks) {
+        super = super + net;
     }
+    super.sort();
+    return super;
 }
 
 int main() {
     LinkedList<Network> networks {};
     inputNetworks(networks);
     
+    LinkedList<SocialNetwork> socials {};
+    for (Network& net : networks) {
+        socials.add(SocialNetwork(net));
+        // delete &net;
+    }
+
+    SocialNetwork super = makeSuperNetwork(socials);
+    
+    return 0;
     inputQueries();
 
     // // testing the application
